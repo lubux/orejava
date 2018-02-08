@@ -6,6 +6,7 @@ Implements a Java wrapper for the
 
 ## Prerequisites 
 Make sure you have the following installed:
+ * [CMake](https://cmake.org/)
  * [GMP 5](http://gmplib.org/)
  * [OpenSSL](http://www.openssl.org/source/)
  * [Maven](https://maven.apache.org/)
