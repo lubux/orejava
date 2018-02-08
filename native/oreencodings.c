@@ -43,7 +43,6 @@ int ore_key_encode(byte* buff, size_t  bufflen, ore_secret_key key) {
 }
 
 int ore_key_init_from_bytes(ore_secret_key key, byte* keybuff, size_t  bufflen, ore_params params) {
-    size_t key_len = ore_key_get_encoded_len(key);
     if (bufflen < ore_key_get_encoded_len(key)) {
         return ERROR_PARAMS_INVALID;
     }
@@ -53,8 +52,9 @@ int ore_key_init_from_bytes(ore_secret_key key, byte* keybuff, size_t  bufflen, 
     key->initialized = true;
 
     #ifdef USE_AES
-        AES_128_Key_Expansion(keybuf, &(key->key->key));
+        AES_128_Key_Expansion(keybuff, &(key->key->key));
     #else
+        size_t key_len = ore_key_get_encoded_len(key);
         memcpy(key->key->keybuf, keybuff, key_len);
 
     #endif

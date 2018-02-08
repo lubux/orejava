@@ -22,7 +22,7 @@
 // values when AES is the underlying PRF. The HMAC implementation supports
 // encrypting messages from an arbitrary plaintext space.
 
-//#define USE_AES
+#define USE_AES
 
 // Set this flag to use AES to instantiate the random oracle in the block ORE
 // (ore_blk) construction. This construction can be proven secure if we, for
