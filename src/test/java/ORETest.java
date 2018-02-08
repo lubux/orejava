@@ -79,7 +79,6 @@ public class ORETest {
     @Test
     public void testEncode() {
         OREKey key = ORE.generateKey(rand);
-        OREKey keyA;
         ORE ore = ORE.getDefaultOREInstance(key);
         long val1 = 10, val2 = 20;
         ORECiphertext ctxt1, ctxt2, ctxt1A,  ctxt2A;

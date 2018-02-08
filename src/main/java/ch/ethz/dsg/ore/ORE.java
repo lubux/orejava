@@ -12,6 +12,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+/**
+ * Implements a Java wrapper for the order revealing encryption scheme from Chenette et al.
+ * https://github.com/kevinlewi/fastore
+ */
 public class ORE {
     static {
         NativeLibraryUtil.loadNativeLibrary(ORE.class, "ore-jni-wrapper");
@@ -31,10 +35,22 @@ public class ORE {
         this.key = key;
     }
 
+    /**
+     * Get an ORE Instance with the default PARAMS (64 bits, 2)
+     * @param key an ORE KEy
+     * @return and ORE instance
+     */
     public static ORE getDefaultOREInstance(OREKey key) {
         return new ORE(key, DEFAULT_NBITS, DEFAULT_K);
     }
 
+    /**
+     * Get an ORE instance with the given Parameters.
+     * @param key the ORE Key
+     * @param nbits the number of plaintext bits
+     * @param k the bulk parameter (must be >1)
+     * @return
+     */
     public static ORE getOREInstance(OREKey key, int nbits, int k) {
         return new ORE(key, nbits, k);
     }
@@ -60,23 +76,43 @@ public class ORE {
     }
 
 
+    /**
+     * Generates an ORE Key with the given randomness
+     * @param rand randomness
+     * @return an ORE Key
+     */
     public static OREKey generateKey(Random rand) {
         byte[] content = new byte[getKeySize()];
         rand.nextBytes(content);
         return new OREKey(content);
     }
 
+    /**
+     * Generates an ORE Key
+     * @return an ORE Key
+     */
     public static OREKey generateKey() {
         return generateKey(new SecureRandom());
     }
 
-
+    /**
+     * Encrypts a 64-bit value wit ORE
+     * @param value the input value
+     * @return ORE Ciphertext with an ORE tag and the encrypted content
+     * @throws Exception
+     */
     public ORECiphertext encrypt(long value) throws Exception {
         byte[] tag = encrypt(value, this.key.keyContent, this.nbits, this.k);
         byte[] content = encryptBF(value);
         return new ORECiphertext(new ORETag(nbits, k, tag), content);
     }
 
+    /**
+     * Decrypts an ORE ciphertext and returns the 64-bit integer
+     * @param ciphertext
+     * @return the plaintext integer
+     * @throws Exception
+     */
     public long decrypt(ORECiphertext ciphertext) throws Exception {
         return decryptBF(ciphertext.content);
     }
@@ -140,6 +176,11 @@ public class ORE {
             return content;
         }
 
+        /**
+         * Compares the current ciphertext with another ciphertext.
+         * @param other the ORE ciphertext to compare to
+         * @return 1 = this is greater than other, 0 = equal, -1 this is less than other
+         */
         public int compareTo(ORECiphertext other) {
             return this.tag.compareTo(other.tag);
         }
@@ -180,6 +221,11 @@ public class ORE {
             this.tag = tag;
         }
 
+        /**
+         * Compares the current tag with another ORE encrypted tag.
+         * @param other the ORE Tag to compare to
+         * @return 1 = this is greater than other, 0 = equal, -1 this is less than other
+         */
         public int compareTo(ORETag other) {
             if(this.nbits != other.nbits || this.k != other.k)
                 throw new IllegalArgumentException("Parameters don't match");
