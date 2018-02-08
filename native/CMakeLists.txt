@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ecelgamal)
+project(orejava)
 
 find_package(Java REQUIRED)
 find_package(JNI REQUIRED)
