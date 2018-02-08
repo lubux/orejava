@@ -25,8 +25,6 @@ public class ORE {
     private int k;
     private OREKey key;
 
-    SecureRandom random = new SecureRandom();
-
     private ORE(OREKey key, int nbits, int k) {
         this.nbits = nbits;
         this.k = k;
@@ -53,7 +51,6 @@ public class ORE {
     }
 
     private long decryptBF(byte[] data) throws Exception {
-
         SecretKeySpec keySpec = new SecretKeySpec(key.getBFKey(), "Blowfish");
         Cipher cipher = Cipher.getInstance("Blowfish/ECB/NoPadding");
         cipher.init(Cipher.DECRYPT_MODE, keySpec);
@@ -75,8 +72,6 @@ public class ORE {
 
 
     public ORECiphertext encrypt(long value) throws Exception {
-        if (value < 0)
-            throw new IllegalArgumentException("value must be positive");
         byte[] tag = encrypt(value, this.key.keyContent, this.nbits, this.k);
         byte[] content = encryptBF(value);
         return new ORECiphertext(new ORETag(nbits, k, tag), content);

@@ -42,10 +42,6 @@ public class ORETest {
 
     }
 
-    private long getPosNumber() {
-        long num = basicRand.nextLong();
-        return (num < 0) ? -num : num;
-    }
 
     @Test
     public void testRand() {
@@ -53,11 +49,11 @@ public class ORETest {
         ORE ore = ORE.getDefaultOREInstance(key);
         ORECiphertext ctxt1, ctxt2;
         for (int i=0;  i<1000; i++){
-            long val1 = getPosNumber(),val2;
+            long val1 = basicRand.nextLong(),val2;
             long val1Dec, val2Dec;
             int cmp;
             do {
-                val2 = getPosNumber();
+                val2 = basicRand.nextLong();
             } while (val1 == val2);
             try {
                 ctxt1 = ore.encrypt(val1);
@@ -104,6 +100,4 @@ public class ORETest {
         }
 
     }
-
-
 }

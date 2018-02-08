@@ -95,12 +95,16 @@ jbyteArray Java_ch_ethz_dsg_ore_ORE_encrypt(JNIEnv *env,
     ore_secret_key key;
     ore_ciphertext ciphertext;
     jbyteArray res;
+    uint64_t value_to_encrypt;
+    
+    // allow for neg numbers (java)
+    value_to_encrypt = (uint64_t) (value +  0x8000000000000000);
 
     init_ore_params(params, (uint32_t) nbits, (uint32_t) k);
     get_key(env, key, key_oct, params);
     init_ore_ciphertext(ciphertext, params);
 
-    ore_encrypt_ui(ciphertext, key, (uint64_t) value);
+    ore_encrypt_ui(ciphertext, key, value_to_encrypt);
 
     cipher_size = (size_t) ore_ciphertext_size(ciphertext->params);
     res = as_byte_array(env, ciphertext->buf, (int) cipher_size);
